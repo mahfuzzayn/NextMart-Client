@@ -1,6 +1,8 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import ReCAPTCHA from "react-google-recaptcha";
 import Logo from "@/app/assets/svgs/Logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,28 +15,39 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { registrationSchema } from "../register/registerValidation";
 import Link from "next/link";
-import { registerUser } from "@/services/AuthService";
+import { loginUser, reCaptchaTokenVerification } from "@/services/AuthService";
 import { toast } from "sonner";
+import { loginSchema } from "./loginValidation";
 
-const RegisterForm = () => {
+const LoginForm = () => {
     const form = useForm({
-        resolver: zodResolver(registrationSchema),
+        resolver: zodResolver(loginSchema),
     });
+
+    const [reCaptchaStatus, setReCaptchaStatus] = useState(false);
 
     const {
         formState: { isSubmitting },
     } = form;
 
-    const password = form.watch("password");
-    const passwordConfirm = form.watch("passwordConfirm");
+    const handleReCaptcha = async (value: string | null) => {
+        try {
+            const res = await reCaptchaTokenVerification(value!);
+
+            if (res?.success) {
+                setReCaptchaStatus(true);
+            }
+        } catch (error: any) {
+            console.error(Error(error));
+        }
+    };
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
-            const res = await registerUser(data);
+            const res = await loginUser(data);
 
             if (res?.success) {
                 toast.success(res?.message);
@@ -51,30 +64,12 @@ const RegisterForm = () => {
             <div className="flex items-center space-x-4">
                 <Logo />
                 <div>
-                    <h1>Register</h1>
-                    <p className="font-extralight text-sm">
-                        Join us today and start your journey!
-                    </p>
+                    <h1>Login</h1>
+                    <p className="font-extralight text-sm">Welcome back!</p>
                 </div>
             </div>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Name</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        {...field}
-                                        value={field.value || ""}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
                     <FormField
                         control={form.control}
                         name="email"
@@ -109,44 +104,28 @@ const RegisterForm = () => {
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="passwordConfirm"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Confirm Password</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        type="password"
-                                        {...field}
-                                        value={field.value || ""}
-                                    />
-                                </FormControl>
-                                {passwordConfirm &&
-                                password !== passwordConfirm ? (
-                                    <FormMessage>
-                                        Password does not matches
-                                    </FormMessage>
-                                ) : (
-                                    <FormMessage />
-                                )}
-                            </FormItem>
-                        )}
-                    />
+                    <div className="flex my-3 w-full">
+                        <ReCAPTCHA
+                            sitekey={
+                                process.env
+                                    .NEXT_PUBLIC_RECAPTCHA_CLIENT_KEY as string
+                            }
+                            onChange={handleReCaptcha}
+                            className="mx-auto mt-5"
+                        />
+                    </div>
                     <Button
-                        disabled={
-                            passwordConfirm && password !== passwordConfirm
-                        }
+                        disabled={reCaptchaStatus ? false : true}
                         type="submit"
                         className="w-full mt-5"
                     >
-                        {isSubmitting ? "Registering..." : "Register"}
+                        {isSubmitting ? "Logging..." : "Login"}
                     </Button>
                 </form>
                 <p className="text-sm text-gray-600 text-center my-3">
-                    Already have an account?{" "}
-                    <Link href="/login" className="text-primary">
-                        Login
+                    Don't have any account?{" "}
+                    <Link href="/register" className="text-primary">
+                        Register
                     </Link>
                 </p>
             </Form>
@@ -154,4 +133,4 @@ const RegisterForm = () => {
     );
 };
 
-export default RegisterForm;
+export default LoginForm;
