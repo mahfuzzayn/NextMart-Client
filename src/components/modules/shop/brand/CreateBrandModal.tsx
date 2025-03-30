@@ -66,24 +66,7 @@ const CreateBrandModal = () => {
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <FormField
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Name</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="text"
-                                            {...field}
-                                            value={field.value || ""}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <div className="flex items-center justify-between mt-5">
+                        <div className="flex items-center justify-center">
                             {imagePreview.length > 0 ? (
                                 <ImagePreviewer
                                     setImageFiles={setImageFiles}
@@ -101,6 +84,23 @@ const CreateBrandModal = () => {
                                 </div>
                             )}
                         </div>
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="text"
+                                            {...field}
+                                            value={field.value || ""}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <Button type="submit" className="w-full mt-5">
                             {isSubmitting ? "Creating..." : "Create"}
                         </Button>
