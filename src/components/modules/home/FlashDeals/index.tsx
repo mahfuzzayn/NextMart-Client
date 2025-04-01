@@ -13,7 +13,7 @@ const FlashDeals = async () => {
         <div className="container mx-auto my-20">
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-4">
-                    <h2 className="text-2xl font-bold">Flash Deals</h2>
+                    <h2 className="text-2xl font-bold">Flash Deals Now</h2>
                     <Countdown />
                 </div>
                 <Link href="/products">
