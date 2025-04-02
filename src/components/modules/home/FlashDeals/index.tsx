@@ -5,12 +5,13 @@ import { IProduct } from "@/types";
 import Link from "next/link";
 import React from "react";
 import Countdown from "./Countdown";
+import NMContainer from "@/components/ui/core/NMContainer";
 
 const FlashDeals = async () => {
     const { data: products } = await getAllProducts();
 
     return (
-        <div className="container mx-auto my-20">
+        <NMContainer className="my-20">
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-4">
                     <h2 className="text-2xl font-bold">Flash Deals Now</h2>
@@ -29,7 +30,7 @@ const FlashDeals = async () => {
                         <ProductCard key={idx} product={product} />
                     ))}
             </div>
-        </div>
+        </NMContainer>
     );
 };
 

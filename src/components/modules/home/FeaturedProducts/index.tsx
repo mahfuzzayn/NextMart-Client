@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import NMContainer from "@/components/ui/core/NMContainer";
 import ProductCard from "@/components/ui/core/ProductCard";
 import { getAllProducts } from "@/services/Product";
 import { IProduct } from "@/types";
@@ -9,7 +10,7 @@ const FeaturedProducts = async () => {
 
     return (
         <div className="bg-white bg-opacity-50 py-10">
-            <div className="container mx-auto">
+            <NMContainer>
                 <div className="flex justify-between items-center">
                     <h2 className="text-2xl font-bold">Featured Products</h2>
                     <Link href="/products">
@@ -30,7 +31,7 @@ const FeaturedProducts = async () => {
                             <ProductCard key={idx} product={product} />
                         ))}
                 </div>
-            </div>
+            </NMContainer>
         </div>
     );
 };

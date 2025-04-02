@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import NMContainer from "@/components/ui/core/NMContainer";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -40,7 +41,7 @@ const TopBrand = async () => {
 
     return (
         <div className="bg-white bg-opacity-50 py-10">
-            <div className="container mx-auto">
+            <NMContainer>
                 <div className="flex justify-between items-center">
                     <h2 className="text-2xl font-bold">Top Brand</h2>
                     <Link href="/products">
@@ -67,7 +68,7 @@ const TopBrand = async () => {
                         </div>
                     ))}
                 </div>
-            </div>
+            </NMContainer>
         </div>
     );
 };
