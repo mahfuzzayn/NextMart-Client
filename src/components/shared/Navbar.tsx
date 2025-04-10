@@ -1,6 +1,5 @@
 "use client";
-
-import Logo from "@/app/assets/svgs/Logo";
+import Logo from "@/assets/svgs/Logo";
 import { Button } from "../ui/button";
 import { Heart, LogOut, ShoppingBag } from "lucide-react";
 import Link from "next/link";
@@ -12,7 +11,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { logout } from "@/services/AuthService";
 import { useUser } from "@/context/UserContext";
 import { usePathname, useRouter } from "next/navigation";
@@ -26,19 +25,19 @@ export default function Navbar() {
     const handleLogOut = () => {
         logout();
         setIsLoading(true);
-
         if (protectedRoutes.some((route) => pathname.match(route))) {
             router.push("/");
         }
     };
 
     return (
-        <header className="border-b w-full">
-            <div className="container flex justify-between items-center mx-auto h-16 px-3">
-                <h1 className="text-2xl font-black flex items-center">
-                    <Logo />
-                    Next Mart
-                </h1>
+        <header className="border-b bg-background w-full sticky top-0 z-10">
+            <div className="container flex justify-between items-center mx-auto h-16 px-5">
+                <Link href="/">
+                    <h1 className="text-2xl font-black flex items-center">
+                        <Logo /> Next Mart
+                    </h1>
+                </Link>
                 <div className="max-w-md  flex-grow">
                     <input
                         type="text"
@@ -59,47 +58,38 @@ export default function Navbar() {
                     >
                         <ShoppingBag />
                     </Button>
-                    {user ? (
+
+                    {user?.email ? (
                         <>
-                            {!user?.hasShop && (
-                                <Link href="/create-shop">
-                                    <Button className="rounded-full">
-                                        Create Shop
-                                    </Button>
-                                </Link>
-                            )}
+                            <Link href="/create-shop">
+                                <Button className="rounded-full">
+                                    Create Shop
+                                </Button>
+                            </Link>
+
                             <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
+                                <DropdownMenuTrigger>
                                     <Avatar>
-                                        <AvatarImage
-                                            src="https://github.com/shadcn.png"
-                                            alt="@shadcn"
-                                        />
+                                        <AvatarImage src="https://github.com/shadcn.png" />
                                         <AvatarFallback>User</AvatarFallback>
                                     </Avatar>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-56">
+                                <DropdownMenuContent>
                                     <DropdownMenuLabel>
-                                        <Link href="/user/dashboard/shop">
-                                            My Accounts
-                                        </Link>
+                                        My Account
                                     </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem>Profile</DropdownMenuItem>
                                     <DropdownMenuItem>
-                                        <Link href="/user/dashboard">
+                                        <Link href={`/${user?.role}/dashboard`}>
                                             Dashboard
                                         </Link>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <Link href="/user/dashboard/shop">
-                                            My Shop
-                                        </Link>
-                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>My Shop</DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem
+                                        className="bg-red-500 cursor-pointer"
                                         onClick={handleLogOut}
-                                        className="bg-red-500 text-white cursor-pointer"
                                     >
                                         <LogOut />
                                         <span>Log Out</span>
