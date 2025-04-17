@@ -25,6 +25,7 @@ export default function Navbar() {
     const handleLogOut = () => {
         logout();
         setIsLoading(true);
+        
         if (protectedRoutes.some((route) => pathname.match(route))) {
             router.push("/");
         }

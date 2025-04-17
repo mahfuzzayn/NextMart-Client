@@ -5,8 +5,6 @@ import React from "react";
 const ProductBrandPage = async () => {
     const { data } = await getAllBrands();
 
-    console.log(data);
-
     return (
         <div>
             <ManageBrands brands={data} />

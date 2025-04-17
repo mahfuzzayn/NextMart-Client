@@ -1,17 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
+import { getValidToken } from "@/lib/verifyToken";
 import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
 
 export const createCategory = async (data: FormData) => {
+    const token = await getValidToken();
+
     try {
         const res = await fetch(
             `${process.env.NEXT_PUBLIC_BASE_API}/category`,
             {
                 method: "POST",
                 headers: {
-                    Authorization: (await cookies()).get("accessToken")!.value,
+                    Authorization: token,
                 },
                 body: data,
             }
@@ -42,13 +44,15 @@ export const getAllCategories = async () => {
 };
 
 export const deleteCategory = async (id: string) => {
+    const token = await getValidToken();
+
     try {
         const res = await fetch(
             `${process.env.NEXT_PUBLIC_BASE_API}/category/${id}`,
             {
                 method: "DELETE",
                 headers: {
-                    Authorization: (await cookies()).get("accessToken")!.value,
+                    Authorization: token,
                 },
             }
         );
